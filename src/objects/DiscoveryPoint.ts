@@ -3,7 +3,7 @@ import { TILE_SIZE } from '../constants'
 import { DiscoveryData } from '../data/discoveryPoints'
 
 export class DiscoveryPoint extends Phaser.GameObjects.Container {
-  public data: DiscoveryData
+  public pointData: DiscoveryData
   public triggered: boolean = false
   private glow: Phaser.GameObjects.Arc
   private icon: Phaser.GameObjects.Text
@@ -14,7 +14,7 @@ export class DiscoveryPoint extends Phaser.GameObjects.Container {
     const pixelY = data.tileY * TILE_SIZE + TILE_SIZE / 2
     super(scene, pixelX, pixelY)
 
-    this.data = data
+    this.pointData = data
 
     // Outer glow ring
     this.glow = scene.add.arc(0, 0, 25, 0, 360, false, 0xffff00, 0.5)
@@ -30,7 +30,7 @@ export class DiscoveryPoint extends Phaser.GameObjects.Container {
       .setOrigin(0.5)
 
     this.add([this.glow, dot, this.icon])
-    scene.add.existing(this)
+    scene.add.existing(this as unknown as Phaser.GameObjects.GameObject)
     this.setDepth(5)
 
     // Pulse animation
@@ -47,7 +47,6 @@ export class DiscoveryPoint extends Phaser.GameObjects.Container {
   markDiscovered() {
     this.triggered = true
     this.glowTween.stop()
-    // Turn green to show it's been visited
     this.glow.setFillStyle(0x00ff88, 1)
     this.icon.setText('✓')
   }

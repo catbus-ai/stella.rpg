@@ -93,8 +93,8 @@ export class GameScene extends Phaser.Scene {
     for (const point of this.discoveryPoints) {
       if (point.triggered) continue
 
-      const dx = Math.abs(this.stella.tileX - point.data.tileX)
-      const dy = Math.abs(this.stella.tileY - point.data.tileY)
+      const dx = Math.abs(this.stella.tileX - point.pointData.tileX)
+      const dy = Math.abs(this.stella.tileY - point.pointData.tileY)
 
       if (dx <= DISCOVERY_TRIGGER_RADIUS && dy <= DISCOVERY_TRIGGER_RADIUS) {
         point.markDiscovered()
@@ -108,9 +108,9 @@ export class GameScene extends Phaser.Scene {
     this.popupOpen = true
     this.scene.pause()
 
-    showDiscoveryPopup(point.data, () => {
+    showDiscoveryPopup(point.pointData, () => {
       this.badges += 1
-      this.earnedBadges.push({ label: point.data.badge, image: point.data.badgeImage })
+      this.earnedBadges.push({ label: point.pointData.badge, image: point.pointData.badgeImage })
       this.xp += XP_PER_DISCOVERY
       this.checkLevelUp()
       this.emitStats()
@@ -153,8 +153,8 @@ export class GameScene extends Phaser.Scene {
     for (const cp of this.challengePoints) {
       if (cp.resolved) continue
 
-      const dx = Math.abs(this.stella.tileX - cp.data.tileX)
-      const dy = Math.abs(this.stella.tileY - cp.data.tileY)
+      const dx = Math.abs(this.stella.tileX - cp.pointData.tileX)
+      const dy = Math.abs(this.stella.tileY - cp.pointData.tileY)
 
       if (dx <= DISCOVERY_TRIGGER_RADIUS && dy <= DISCOVERY_TRIGGER_RADIUS) {
         this.openClassificationPopup(cp)
@@ -168,7 +168,7 @@ export class GameScene extends Phaser.Scene {
     this.popupOpen = true
     this.scene.pause()
 
-    showClassificationPopup(cp.data, this.activeMission.question, (result) => {
+    showClassificationPopup(cp.pointData, this.activeMission.question, (result) => {
       this.scene.resume()
       this.popupOpen = false
 
@@ -506,8 +506,8 @@ export class GameScene extends Phaser.Scene {
       // Point toward nearest unresolved challenge
       for (const cp of this.challengePoints) {
         if (cp.resolved) continue
-        const dx = cp.data.tileX - this.stella.tileX
-        const dy = cp.data.tileY - this.stella.tileY
+        const dx = cp.pointData.tileX - this.stella.tileX
+        const dy = cp.pointData.tileY - this.stella.tileY
         const dist = Math.sqrt(dx * dx + dy * dy)
         if (dist < nearestDist) {
           nearestDist = dist
@@ -520,8 +520,8 @@ export class GameScene extends Phaser.Scene {
       // Point toward nearest undiscovered discovery point
       for (const dp of this.discoveryPoints) {
         if (dp.triggered) continue
-        const dx = dp.data.tileX - this.stella.tileX
-        const dy = dp.data.tileY - this.stella.tileY
+        const dx = dp.pointData.tileX - this.stella.tileX
+        const dy = dp.pointData.tileY - this.stella.tileY
         const dist = Math.sqrt(dx * dx + dy * dy)
         if (dist < nearestDist) {
           nearestDist = dist

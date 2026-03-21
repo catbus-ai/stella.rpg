@@ -338,7 +338,7 @@ export class IntroScene extends Phaser.Scene {
     let pulse = 0
     this.tweens.addCounter({
       from: 0, to: 1, duration: 700, yoyo: true, repeat: -1,
-      onUpdate: t => { pulse = t.getValue(); drawSatellite(pulse) },
+      onUpdate: t => { pulse = t.getValue() ?? 0; drawSatellite(pulse) },
     })
     drawSatellite(0)
 
