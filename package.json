@@ -1,0 +1,19 @@
+{
+  "name": "stella",
+  "version": "0.1.0",
+  "description": "Stella — an educational satellite RPG game",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.0"
+  },
+  "dependencies": {
+    "phaser": "^3.80.1"
+  }
+}
