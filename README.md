@@ -2,6 +2,8 @@
 
 An educational browser-based RPG where players guide Stella (a German Shepherd satellite scientist) through a SAR satellite image of the 2025 LA wildfire to learn Earth observation science.
 
+**Play it now:** https://catbus-ai.github.io/stella.rpg/
+
 **Tech:** Phaser 3 · TypeScript · Vite
 
 ---
