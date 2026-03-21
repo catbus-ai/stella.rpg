@@ -31,9 +31,45 @@
         image-rendering: pixelated;
         touch-action: none;
       }
+
+      /* ── Rotate notice — portrait mode on mobile/tablet only ── */
+      #rotate-notice {
+        display: none;
+      }
+      @media (orientation: portrait) and (max-width: 1024px) {
+        #rotate-notice {
+          display: flex;
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          background: #000;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 24px;
+          font-family: "Press Start 2P", monospace;
+          text-align: center;
+          padding: 32px;
+        }
+        /* Pause the game canvas behind the overlay */
+        canvas { visibility: hidden; }
+      }
     </style>
     <script type="module" crossorigin src="./assets/index-BdYowt8-.js"></script>
   </head>
   <body>
+    <div id="rotate-notice">
+      <div style="font-size: 64px; animation: spin 2s ease-in-out infinite;">⟳</div>
+      <p style="font-size: 11px; color: #ffff00; line-height: 2.2;">ROTATE YOUR DEVICE</p>
+      <p style="font-size: 7px; color: #888888; line-height: 2.4;">Stella works best<br>in landscape mode</p>
+    </div>
+    <style>
+      @keyframes spin {
+        0%   { transform: rotate(0deg);   }
+        40%  { transform: rotate(90deg);  }
+        60%  { transform: rotate(90deg);  }
+        100% { transform: rotate(90deg);  }
+      }
+    </style>
   </body>
 </html>
