@@ -13,12 +13,16 @@
         padding: 0;
         box-sizing: border-box;
       }
+      html {
+        height: 100%;
+      }
       body {
         background: #000;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
+        height: 100dvh;          /* dynamic viewport — shrinks with mobile browser chrome */
+        min-height: -webkit-fill-available;  /* Safari fallback */
         overflow: hidden;
         touch-action: none;
       }
