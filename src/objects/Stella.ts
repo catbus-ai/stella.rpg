@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { TILE_SIZE, MAP_WIDTH_TILES, MAP_HEIGHT_TILES, MOVE_DURATION_MS } from '../constants'
+import { virtualInput } from '../input/virtualInput'
 
 // Stella is displayed at this height in pixels on the map.
 // Increase this number to make her bigger on the SAR map.
@@ -43,10 +44,10 @@ export class Stella extends Phaser.GameObjects.Container {
     let dx = 0
     let dy = 0
 
-    if (this.cursors.left.isDown) dx = -1
-    else if (this.cursors.right.isDown) dx = 1
-    else if (this.cursors.up.isDown) dy = -1
-    else if (this.cursors.down.isDown) dy = 1
+    if      (this.cursors.left.isDown  || virtualInput.left)  dx = -1
+    else if (this.cursors.right.isDown || virtualInput.right) dx =  1
+    else if (this.cursors.up.isDown    || virtualInput.up)    dy = -1
+    else if (this.cursors.down.isDown  || virtualInput.down)  dy =  1
 
     if (dx === 0 && dy === 0) return
 

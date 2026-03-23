@@ -4,7 +4,7 @@ export interface EarnedBadge {
 }
 
 // ── Pig ear reveal — shown before beam-up ─────────────────────────────────
-export function showPigEarReveal(onClose: () => void) {
+export function showPigEarReveal(badge: { label: string; image: string }, onClose: () => void) {
   const overlay = document.createElement('div')
   overlay.style.cssText = `
     position: fixed;
@@ -37,8 +37,8 @@ export function showPigEarReveal(onClose: () => void) {
   label.textContent = '[ BADGE UNLOCKED ]'
 
   const img = document.createElement('img')
-  img.src = 'assets/images/badge-pigear.png'
-  img.alt = 'Pig Ear Champion'
+  img.src = `assets/images/${badge.image}`
+  img.alt = badge.label
   img.style.cssText = `
     width: 240px;
     height: 240px;
@@ -55,8 +55,9 @@ export function showPigEarReveal(onClose: () => void) {
     margin: 0;
     line-height: 1.8;
   `
-  badgeName.textContent = 'PIG EAR CHAMPION'
+  badgeName.textContent = badge.label.toUpperCase()
 
+  const isPerfect = badge.image === 'badge-pigear.png'
   const sublabel = document.createElement('p')
   sublabel.style.cssText = `
     font-size: 7px;
@@ -64,7 +65,9 @@ export function showPigEarReveal(onClose: () => void) {
     margin: 0;
     line-height: 2;
   `
-  sublabel.textContent = 'Earned for exceptional field work and one very large pig ear.'
+  sublabel.textContent = isPerfect
+    ? 'Earned for exceptional field work and one very large pig ear.'
+    : 'Earned for completing the mission — every treat counts.'
 
   const hint = document.createElement('p')
   hint.style.cssText = `
@@ -111,7 +114,7 @@ export function showPigEarReveal(onClose: () => void) {
 }
 
 // ── End screen — badges showcase ──────────────────────────────────────────
-export function showEndScreen(badges: EarnedBadge[]) {
+export function showEndScreen(badges: EarnedBadge[], onReturn: () => void) {
   // Shared hover preview element
   const preview = document.createElement('div')
   preview.style.cssText = `
@@ -303,13 +306,30 @@ export function showEndScreen(badges: EarnedBadge[]) {
     letter-spacing: 1px;
     margin-bottom: 10px;
   `
-  replayBtn.textContent = '[ PLAY AGAIN ]'
+  replayBtn.textContent = '[ BACK TO CHAPTERS ]'
   replayBtn.addEventListener('click', () => {
     preview.remove()
     overlay.remove()
-    window.location.reload()
+    onReturn()
   })
   card.appendChild(replayBtn)
+
+  const replayAgainBtn = document.createElement('button')
+  replayAgainBtn.style.cssText = `
+    display: block;
+    width: 100%;
+    background: transparent;
+    color: #888888;
+    border: 2px solid #333333;
+    padding: 10px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+  `
+  replayAgainBtn.textContent = '[ PLAY AGAIN ]'
+  replayAgainBtn.addEventListener('click', () => window.location.reload())
+  card.appendChild(replayAgainBtn)
 
   overlay.appendChild(card)
   document.body.appendChild(overlay)

@@ -36,9 +36,9 @@ export const CLASSIFICATION_MISSION: ClassificationMission = {
   id: 'mission-final',
   briefing:
     'You have seen it all — burnt rubble, standing structures, forest. ' +
-    'Now prove you can read the radar on your own. ' +
+    'Now prove you can read the satellite image on your own. ' +
     'I have marked 7 locations. Tell me what each one is. ' +
-    'Use everything you learned. The scientists are counting on this data.',
+    'Use everything you learned. We are counting on this data.',
   question: 'What type of location is this?',
   missionBadge: 'SAR Analyst',
   missionBadgeImage: 'badge-burntzone.png', // swap for a final mission badge when ready
@@ -58,8 +58,7 @@ export const CLASSIFICATION_MISSION: ClassificationMission = {
       tileY: 18,
       correctAnswer: 'intact',
       wrongHint:
-        'A strong, saturated color in the CSI image means solid walls are still standing. ' +
-        'Corner reflectors bounce the signal cleanly back to the satellite.',
+        'A strong, saturated color means solid walls are still standing. ' ,
     },
     {
       id: 'cf3',
@@ -76,17 +75,15 @@ export const CLASSIFICATION_MISSION: ClassificationMission = {
       tileY: 35,
       correctAnswer: 'burnt',
       wrongHint:
-        'No strong color and a noisy texture means the structure is gone. ' +
-        'Burnt buildings lose the corner reflectors that create a strong return.',
-    },
+        'No strong color and a noisy texture means the structure is gone. ' ,    },
     {
       id: 'cf5',
       tileX: 21,   // PLACEHOLDER — update with coordinate picker
       tileY: 30,
       correctAnswer: 'intact',
       wrongHint:
-        'See those bright, colorful pixels? That is double-bounce scattering — ' +
-        'the wall and ground acting like a corner reflector. Building is standing.',
+        'See those bright, colorful pixels? That is a manmade object — ' +
+        'the building is standing.',
     },
     {
       id: 'cf6',

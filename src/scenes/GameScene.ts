@@ -5,8 +5,10 @@ import { DiscoveryPoint } from '../objects/DiscoveryPoint'
 import { ChallengePoint } from '../objects/ChallengePoint'
 import { showDiscoveryPopup } from '../ui/DiscoveryPopup'
 import { showClassificationPopup } from '../ui/ClassificationPopup'
-import { showIntroDialogue, triggerAdvance } from '../ui/IntroDialogue'
+import { showIntroDialogue, triggerAdvance, removeIntroDialogue } from '../ui/IntroDialogue'
 import { showEndScreen, showPigEarReveal } from '../ui/EndScreen'
+import { saveChapterProgress, markChapterStarted } from '../utils/progress'
+import { TouchControls } from '../ui/TouchControls'
 import { DISCOVERY_POINTS } from '../data/discoveryPoints'
 import { CLASSIFICATION_MISSION, ClassificationMission } from '../data/classificationMissions'
 
@@ -27,6 +29,8 @@ export class GameScene extends Phaser.Scene {
   private badges: number = 0
   private treats: number = 0
   private popupOpen: boolean = false
+  private touchControls!: TouchControls
+  private classificationMistakes: number = 0
 
   constructor() {
     super({ key: 'GameScene' })
@@ -40,6 +44,13 @@ export class GameScene extends Phaser.Scene {
       map.destroy()
       this.drawPlaceholderMap()
     }
+
+    // ── SAR image watermark ──────────────────────────────
+    this.add.text(CANVAS_WIDTH - 8, CANVAS_HEIGHT - 50 - 8, 'ICEYE SAR Image (2025)', {
+      fontFamily: '"Press Start 2P"',
+      fontSize: '7px',
+      color: '#ffffff',
+    }).setOrigin(1, 1).setAlpha(0.55).setDepth(5).setScrollFactor(0)
 
     // ── Camera bounds ────────────────────────────────────
     this.cameras.main.setBounds(0, 0, MAP_WIDTH_PX, MAP_HEIGHT_PX)
@@ -59,10 +70,17 @@ export class GameScene extends Phaser.Scene {
 
     // ── HUD ──────────────────────────────────────────────
     this.scene.launch('HudScene')
+    this.touchControls = new TouchControls()
+    markChapterStarted(1)
 
     // ── Space bar — advance any open dialogue ─────────────
     this.input.keyboard!.on('keydown-SPACE', () => {
       triggerAdvance()
+    })
+
+    // ── ESC — quit to chapter select ──────────────────────
+    this.input.keyboard!.on('keydown-ESC', () => {
+      this.showQuitConfirm()
     })
 
     // ── Coordinate picker ─────────────────────────────────
@@ -180,6 +198,7 @@ export class GameScene extends Phaser.Scene {
         this.emitStats()
       } else {
         cp.markResolved(false)
+        this.classificationMistakes += 1
         this.hp = Math.max(0, this.hp - HP_LOSS_PER_WRONG)
         this.emitStats()
 
@@ -208,10 +227,7 @@ export class GameScene extends Phaser.Scene {
 
   // ── Mission complete ──────────────────────────────────
   private completeMission() {
-    const mission = this.activeMission!
     this.activeMission = null
-    this.badges += 1
-    this.earnedBadges.push({ label: mission.missionBadge, image: mission.missionBadgeImage })
     this.emitStats()
     this.showEndSequence()
   }
@@ -220,6 +236,11 @@ export class GameScene extends Phaser.Scene {
   private showEndSequence() {
     this.popupOpen = true
     this.scene.pause()
+
+    const perfect    = this.classificationMistakes === 0
+    const finalBadge = perfect
+      ? { label: 'Pig Ear Champion', image: 'badge-pigear.png' }
+      : { label: 'Pupsicle Award',   image: 'badge-pupsicle.png' }
 
     // Step 1 — mission success
     showIntroDialogue(
@@ -237,25 +258,38 @@ export class GameScene extends Phaser.Scene {
           {
             speaker: 'DR. SHAY',
             portrait: 'shay',
-            lines: [
-              'You are the best dog ever! I am so proud of you!',
-              'Not just because you got the data. Because you used what you learned to help me.',
-            ],
+            lines: perfect
+              ? [
+                  'You are the best dog ever! I am so proud of you!',
+                  'Not just because you got the data. Because you used what you learned to help me.',
+                ]
+              : [
+                  'You worked so hard out there, Stella. Even when it got tough.',
+                  'You stumbled a few times, but you never gave up. That\'s what matters.',
+                ],
           },
           () => {
-            // Step 3 — pig ear
+            // Step 3 — the reward
             showIntroDialogue(
               {
                 speaker: 'DR. SHAY',
                 portrait: 'shay-talk',
-                lines: [
-                  'I also got you something.',
-                  'You have been requesting it for four years since we have been in space.',
-                  'The world\'s largest pig ear. I had to special order it.',
-                  'Sit...',
-                  'Wait...',
-                  'OK! It\'s yours.',
-                ],
+                lines: perfect
+                  ? [
+                      'I also got you something.',
+                      'You have been requesting it for four years since we have been in space.',
+                      'The world\'s largest pig ear. I had to special order it.',
+                      'Sit...',
+                      'Wait...',
+                      'OK! It\'s yours.',
+                    ]
+                  : [
+                      'I got you something. Don\'t freak out.',
+                      'A pupsicle. Salmon flavor.',
+                      'Consider savoring the flavor.',
+                      'Sit...',
+                      'OK! It\'s yours.',
+                    ],
               },
               () => {
                 // Step 4 — Stella reacts
@@ -263,19 +297,19 @@ export class GameScene extends Phaser.Scene {
                   {
                     speaker: 'STELLA',
                     portrait: 'stella-mouthopen',
-                    lines: ['...', '(Stella has already eaten the pig ear in one chomp.)'],
+                    lines: perfect
+                      ? ['...', '(Stella has already eaten the pig ear in one chomp.)']
+                      : ['...', '(Stella licks the pupsicle thoughtfully once. But can\'t resist and swallows it whole.)'],
                   },
                   () => {
-                    // Award pig ear badge + treat + XP
                     this.treats += 1
                     this.xp += 100
                     this.badges += 1
-                    this.earnedBadges.push({ label: 'Pig Ear Champion', image: 'badge-pigear.png' })
+                    this.earnedBadges.push(finalBadge)
                     this.emitStats()
                     this.scene.resume()
                     this.popupOpen = false
-                    // Show the badge large before beam-up
-                    showPigEarReveal(() => {
+                    showPigEarReveal(finalBadge, () => {
                       this.playBeamUp()
                     })
                   }
@@ -291,6 +325,7 @@ export class GameScene extends Phaser.Scene {
   // ── Beam-up animation ─────────────────────────────────
   private playBeamUp() {
     this.cameras.main.stopFollow()
+    this.touchControls.destroy()
 
     // Beam of light over Stella
     const beam = this.add.rectangle(
@@ -321,7 +356,11 @@ export class GameScene extends Phaser.Scene {
         // Fade canvas to black then show end screen
         this.cameras.main.fadeOut(600, 0, 0, 0)
         this.cameras.main.once('camerafadeoutcomplete', () => {
-          showEndScreen(this.earnedBadges)
+          saveChapterProgress(1, this.earnedBadges)
+          showEndScreen(this.earnedBadges, () => {
+            this.scene.stop('HudScene')
+            this.scene.start('ChapterSelectScene')
+          })
         })
       },
     })
@@ -535,6 +574,74 @@ export class GameScene extends Phaser.Scene {
     const angle = type === 'none' ? 0 : Math.atan2(nearestDy, nearestDx) + Math.PI / 2
     const distance = Math.round(nearestDist)
     this.events.emit('target-direction', { angle, distance, type })
+  }
+
+  // ── Quit confirmation ─────────────────────────────────
+  private showQuitConfirm() {
+    if (document.getElementById('quit-confirm')) return
+    this.scene.pause()
+
+    const overlay = document.createElement('div')
+    overlay.id = 'quit-confirm'
+    overlay.style.cssText = `
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.82);
+      display: flex; align-items: center; justify-content: center;
+      font-family: "Press Start 2P", monospace;
+    `
+
+    const box = document.createElement('div')
+    box.style.cssText = `
+      background: #0a0a14; border: 3px solid #ffff00;
+      padding: 36px 40px; text-align: center;
+      display: flex; flex-direction: column; gap: 20px;
+    `
+
+    const msg = document.createElement('p')
+    msg.style.cssText = `font-size: 10px; color: #ffffff; margin: 0; line-height: 2;`
+    msg.textContent = 'QUIT TO CHAPTERS?'
+
+    const sub = document.createElement('p')
+    sub.style.cssText = `font-size: 7px; color: #888888; margin: 0; line-height: 2;`
+    sub.textContent = 'Progress in this run will be lost.'
+
+    const btnRow = document.createElement('div')
+    btnRow.style.cssText = `display: flex; gap: 16px; justify-content: center;`
+
+    const yes = document.createElement('button')
+    yes.style.cssText = `
+      background: #ffff00; color: #000000; border: none;
+      padding: 12px 24px; font-family: "Press Start 2P", monospace;
+      font-size: 9px; cursor: pointer;
+    `
+    yes.textContent = 'YES, QUIT'
+    yes.addEventListener('click', () => {
+      overlay.remove()
+      removeIntroDialogue()
+      this.touchControls?.destroy()
+      this.scene.stop('HudScene')
+      this.scene.start('ChapterSelectScene')
+    })
+
+    const no = document.createElement('button')
+    no.style.cssText = `
+      background: transparent; color: #aaaaaa; border: 2px solid #444444;
+      padding: 12px 24px; font-family: "Press Start 2P", monospace;
+      font-size: 9px; cursor: pointer;
+    `
+    no.textContent = 'KEEP PLAYING'
+    no.addEventListener('click', () => {
+      overlay.remove()
+      this.scene.resume()
+    })
+
+    btnRow.appendChild(yes)
+    btnRow.appendChild(no)
+    box.appendChild(msg)
+    box.appendChild(sub)
+    box.appendChild(btnRow)
+    overlay.appendChild(box)
+    document.body.appendChild(overlay)
   }
 
   // ── Coord toast ───────────────────────────────────────

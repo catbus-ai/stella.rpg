@@ -46,12 +46,21 @@ export class BootScene extends Phaser.Scene {
     this.load.image('badge-safehouse',   'assets/images/badge-safehouse.png')
     this.load.image('badge-forestwatch', 'assets/images/badge-forestwatch.png')
     this.load.image('badge-pigear',      'assets/images/badge-pigear.png')
+    this.load.image('badge-pupsicle',    'assets/images/badge-pupsicle.png')
 
     // Portrait images — auto-loaded from the registry in src/data/portraits.ts
     // To add a new portrait, add an entry there and drop the PNG in public/assets/images/
     Object.entries(PORTRAITS).forEach(([key, def]) => {
       this.load.image(`portrait-${key}`, `assets/images/${def.file}`)
     })
+
+    // Optical photos used in discovery popups — preload via browser Image cache
+    // so they appear instantly when the DOM popup opens
+    ;[
+      'assets/images/house-burnt.png',
+      'assets/images/house-intact.png',
+      'assets/images/forest.png',
+    ].forEach(src => { const img = new Image(); img.src = src })
   }
 
   create() {

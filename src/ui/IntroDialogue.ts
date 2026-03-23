@@ -17,19 +17,21 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
   onAdvanceCallback = onAdvance
 
   overlay = document.createElement('div')
-  overlay.id = 'intro-dialogue'
 
   const def = PORTRAITS[step.portrait] ?? PORTRAITS['shay']
   const border      = def.borderColor
   const nameColor   = def.nameColor
   const portraitSrc = `assets/images/${def.file}`
 
+  overlay.id = 'intro-dialogue-overlay'
   overlay.style.cssText = `
     position: fixed;
     left: 50%;
     bottom: 20px;
     transform: translateX(-50%);
     width: min(780px, 96vw);
+    max-height: calc(100dvh - 48px);
+    overflow: hidden;
     background: rgba(2, 8, 20, 0.96);
     border: 3px solid ${border};
     display: flex;
@@ -44,17 +46,21 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
 
   // Portrait column
   const portCol = document.createElement('div')
+  portCol.id = 'intro-portrait-col'
   portCol.style.cssText = `
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 16px 12px;
+    padding-top: 20px;
     min-width: 110px;
     border-right: 2px solid ${border}66;
+    flex-shrink: 0;
   `
 
   const img = document.createElement('img')
+  img.id = 'intro-portrait-img'
   img.src = portraitSrc
   img.alt = step.speaker
   img.style.cssText = `
@@ -67,18 +73,23 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
   portCol.appendChild(img)
   overlay.appendChild(portCol)
 
-  // Text column
+  // Text column — this is the scrollable part
   const textCol = document.createElement('div')
+  textCol.id = 'intro-text-col'
   textCol.style.cssText = `
     flex: 1;
     padding: 16px 20px 14px 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    min-width: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   `
 
   // Speaker name
   const nameEl = document.createElement('div')
+  nameEl.id = 'intro-speaker-name'
   nameEl.style.cssText = `
     font-size: 11px;
     color: ${nameColor};
@@ -95,10 +106,12 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
 
   // Lines — staggered fade-in
   const linesEl = document.createElement('div')
+  linesEl.id = 'intro-lines'
   linesEl.style.cssText = `display: flex; flex-direction: column; gap: 8px;`
 
   step.lines.forEach((line, i) => {
     const p = document.createElement('p')
+    p.className = 'intro-line'
     p.style.cssText = `
       margin: 0;
       font-size: 11px;
@@ -127,7 +140,7 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
     transition: opacity 0.4s ease;
     animation: blink 1.2s ease infinite;
   `
-  hint.textContent = '[ SPACE or CLICK to continue ]'
+  hint.textContent = '[ SPACE / TAP to continue ]'
   textCol.appendChild(hint)
 
   const hintDelay = step.lines.length * 180 + 400
@@ -136,7 +149,7 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
   overlay.appendChild(textCol)
   document.body.appendChild(overlay)
 
-  // Inject blink keyframe if not already present
+  // Inject blink keyframe + responsive styles if not already present
   if (!document.getElementById('intro-blink-style')) {
     const style = document.createElement('style')
     style.id = 'intro-blink-style'
@@ -144,6 +157,35 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
       @keyframes blink {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.3; }
+      }
+      @media (max-height: 500px) {
+        #intro-dialogue-overlay {
+          bottom: 8px;
+        }
+        #intro-portrait-col {
+          padding: 8px;
+          padding-top: 12px;
+          min-width: 72px;
+        }
+        #intro-portrait-img {
+          width: 55px !important;
+          height: 55px !important;
+        }
+        #intro-text-col {
+          padding: 8px 12px;
+          gap: 4px;
+        }
+        #intro-speaker-name {
+          font-size: 8px !important;
+          margin-bottom: 2px;
+        }
+        #intro-lines {
+          gap: 3px;
+        }
+        .intro-line {
+          font-size: 8px !important;
+          line-height: 1.6 !important;
+        }
       }
     `
     document.head.appendChild(style)

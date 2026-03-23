@@ -63,7 +63,7 @@ export class TitleScene extends Phaser.Scene {
     this.input.keyboard!.once('keydown-SPACE', () => {
       this.cameras.main.fadeOut(400, 0, 0, 0)
       this.cameras.main.once('camerafadeoutcomplete', () => {
-        this.scene.start('IntroScene')
+        this.scene.start('ChapterSelectScene')
       })
     })
 
@@ -71,7 +71,7 @@ export class TitleScene extends Phaser.Scene {
     this.input.once('pointerdown', () => {
       this.cameras.main.fadeOut(400, 0, 0, 0)
       this.cameras.main.once('camerafadeoutcomplete', () => {
-        this.scene.start('IntroScene')
+        this.scene.start('ChapterSelectScene')
       })
     })
 

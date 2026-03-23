@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { CANVAS_WIDTH, MAX_HP } from '../constants'
+import { showInstructionsPopup } from '../ui/InstructionsPopup'
 
 const HUD_HEIGHT = 50
 const BAR_WIDTH = 120
@@ -43,7 +44,7 @@ export class HudScene extends Phaser.Scene {
     })
 
     // ── Badges ───────────────────────────────────────────
-    this.badgeText = this.add.text(440, 10, 'BADGES: 0/5', {
+    this.badgeText = this.add.text(440, 10, 'BADGES: 0/4', {
       fontFamily: '"Press Start 2P"',
       fontSize: '8px',
       color: '#ffaa00',
@@ -86,8 +87,19 @@ export class HudScene extends Phaser.Scene {
       color: '#ffff00',
     })
 
+    // ── Help button ──────────────────────────────────────
+    const helpBtn = this.add.text(CANVAS_WIDTH - 8, 8, '[?]', {
+      fontFamily: '"Press Start 2P"',
+      fontSize: '8px',
+      color: '#ffff00',
+    }).setOrigin(1, 0).setInteractive({ useHandCursor: true })
+
+    helpBtn.on('pointerover', () => helpBtn.setColor('#ffffff'))
+    helpBtn.on('pointerout',  () => helpBtn.setColor('#ffff00'))
+    helpBtn.on('pointerdown', () => showInstructionsPopup())
+
     // ── Live tile coords (top-right, dev tool) ────────────
-    this.coordText = this.add.text(CANVAS_WIDTH - 8, 8, 'tile 0,0', {
+    this.coordText = this.add.text(CANVAS_WIDTH - 40, 8, 'tile 0,0', {
       fontFamily: '"Press Start 2P"',
       fontSize: '6px',
       color: '#336633',
