@@ -83,6 +83,25 @@ export class GameScene extends Phaser.Scene {
       this.showQuitConfirm()
     })
 
+    // ── DEV SHORTCUT: Ctrl+Shift+W — skip to end sequence ─
+    this.input.keyboard!.on('keydown-W', (e: KeyboardEvent) => {
+      if (!e.ctrlKey || !e.shiftKey) return
+      // Award all discovery badges
+      DISCOVERY_POINTS.forEach(d => {
+        if (!this.earnedBadges.find(b => b.label === d.badge)) {
+          this.earnedBadges.push({ label: d.badge, image: d.badgeImage })
+          this.badges++
+        }
+      })
+      // Mark all points resolved
+      this.discoveryPoints.forEach(p => { p.triggered = true })
+      this.challengePoints.forEach(p => { p.resolved = true })
+      this.activeMission = null
+      this.classificationMistakes = 0
+      this.emitStats()
+      this.showEndSequence()
+    })
+
     // ── Coordinate picker ─────────────────────────────────
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       const worldX = pointer.worldX
@@ -249,7 +268,7 @@ export class GameScene extends Phaser.Scene {
         portrait: 'shay-talk',
         lines: [
           'Stella. You did it!',
-          'Every location documented and classified. The science team has everything they need to help with the recovery.',
+          'Every location documented & classified. The science team has everything they need to help with the recovery.',
         ],
       },
       () => {
@@ -343,6 +362,16 @@ export class GameScene extends Phaser.Scene {
       scaleY: 0.1,
       duration: 1400,
       ease: 'Cubic.easeIn',
+    })
+
+    // Oscillating wobble as she rides the beam up — mirrors the descent in IntroScene
+    this.tweens.add({
+      targets: this.stella,
+      x: { from: this.stella.x - 6, to: this.stella.x + 6 },
+      duration: 180,
+      yoyo: true,
+      repeat: 4,
+      ease: 'Sine.easeInOut',
     })
 
     // Fade the beam out after Stella is gone

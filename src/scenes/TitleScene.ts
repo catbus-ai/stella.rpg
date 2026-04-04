@@ -28,7 +28,7 @@ export class TitleScene extends Phaser.Scene {
     // ── Subtitle ─────────────────────────────────────────
     this.add.text(CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.30 + 64, 'A SAR SATELLITE ADVENTURE', {
       fontFamily: '"Press Start 2P"',
-      fontSize: '9px',
+      fontSize: '14px',
       color: '#aaaaff',
       resolution: window.devicePixelRatio,
     }).setOrigin(0.5)
@@ -36,7 +36,7 @@ export class TitleScene extends Phaser.Scene {
     // ── Author / year ─────────────────────────────────────
     this.add.text(CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.82, 'by Dr. Shay Strong  —  2026', {
       fontFamily: '"Press Start 2P"',
-      fontSize: '7px',
+      fontSize: '12px',
       color: '#888888',
       resolution: window.devicePixelRatio,
     }).setOrigin(0.5)

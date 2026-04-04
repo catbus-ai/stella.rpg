@@ -82,7 +82,7 @@ export class ChapterSelectScene extends Phaser.Scene {
 
     this.add.text(CANVAS_WIDTH / 2, 90, 'SELECT CHAPTER', {
       fontFamily: '"Press Start 2P"',
-      fontSize: '9px',
+      fontSize: '12px',
       color: '#aaaaff',
       resolution: window.devicePixelRatio,
     }).setOrigin(0.5)
@@ -132,7 +132,7 @@ export class ChapterSelectScene extends Phaser.Scene {
     const complete   = !!progress?.complete
     const inProgress = !!progress?.started && !complete
 
-    const alpha    = ch.unlocked ? 1 : 0.38
+    const alpha    = ch.unlocked ? 1 : 0.5
     const border   = complete ? 0x00ff88 : inProgress ? 0xffaa00 : ch.unlocked ? 0xffff00 : 0x444444
     const numColor = ch.unlocked ? '#ffff00' : '#666666'
     const txtColor = ch.unlocked ? '#ffffff' : '#666666'
@@ -142,6 +142,18 @@ export class ChapterSelectScene extends Phaser.Scene {
     const card = this.add.rectangle(x, y, CARD_W, CARD_H, 0x020814, 0.9 * alpha)
       .setOrigin(0, 0)
       .setStrokeStyle(2, border, alpha)
+
+    // ── "COMING SOON" diagonal watermark for locked chapters ──
+    if (!ch.unlocked) {
+      this.add.text(x + CARD_W / 2, y + CARD_H / 2, 'COMING\nSOON', {
+        fontFamily: '"Press Start 2P"',
+        fontSize: '18px',
+        color: '#ffffff',
+        align: 'center',
+        lineSpacing: 10,
+        resolution: window.devicePixelRatio,
+      }).setOrigin(0.5).setAlpha(0.12).setAngle(-25).setDepth(2)
+    }
 
     // Chapter number
     this.add.text(x + 14, y + 14, `CH.${ch.number}`, {
@@ -167,9 +179,10 @@ export class ChapterSelectScene extends Phaser.Scene {
         resolution: window.devicePixelRatio,
       }).setOrigin(1, 0)
     } else if (!ch.unlocked) {
-      this.add.text(x + CARD_W - 14, y + 14, '🔒', {
-        fontSize: '14px',
-      }).setOrigin(1, 0).setAlpha(0.5)
+      this.add.text(x + CARD_W - 20, y + CARD_H / 2, '🔒', {
+        fontSize: '15px',
+        padding: { x: 10, y: 10 },
+      }).setOrigin(1, 0.5).setAlpha(0.5)
     }
 
     // Title
@@ -188,7 +201,7 @@ export class ChapterSelectScene extends Phaser.Scene {
     // Subtitle
     this.add.text(x + 14, y + 94, ch.subtitle, {
       fontFamily: '"Press Start 2P"',
-      fontSize: '7px',
+      fontSize: '9px',
       color: txtColor,
       resolution: window.devicePixelRatio,
     }).setAlpha(alpha * 0.8)
@@ -196,7 +209,7 @@ export class ChapterSelectScene extends Phaser.Scene {
     // Science tag
     this.add.text(x + 14, y + 116, ch.tag, {
       fontFamily: '"Press Start 2P"',
-      fontSize: '6px',
+      fontSize: '9px',
       color: tagColor,
       resolution: window.devicePixelRatio,
     }).setAlpha(alpha)
@@ -239,7 +252,7 @@ export class ChapterSelectScene extends Phaser.Scene {
 
   private buildBadgeIcons(badges: BadgeRecord[], cardX: number, cardY: number) {
     // Row anchored to bottom-right of card, above the status label
-    const rowY    = cardY + CARD_H - 28
+    const rowY    = cardY + CARD_H - 48
     const rowEndX = cardX + CARD_W - 14
 
     badges.forEach((badge, i) => {

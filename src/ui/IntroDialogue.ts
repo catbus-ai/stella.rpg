@@ -91,9 +91,9 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
   const nameEl = document.createElement('div')
   nameEl.id = 'intro-speaker-name'
   nameEl.style.cssText = `
-    font-size: 11px;
+    font-size: 8px;
     color: ${nameColor};
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     margin-bottom: 4px;
   `
   nameEl.textContent = step.speaker
@@ -114,7 +114,7 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
     p.className = 'intro-line'
     p.style.cssText = `
       margin: 0;
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1.9;
       color: #eeeeee;
       opacity: 0;
@@ -176,14 +176,14 @@ export function showIntroDialogue(step: DialogueStep, onAdvance: () => void) {
           gap: 4px;
         }
         #intro-speaker-name {
-          font-size: 8px !important;
+          font-size: 7px !important;
           margin-bottom: 2px;
         }
         #intro-lines {
           gap: 3px;
         }
         .intro-line {
-          font-size: 8px !important;
+          font-size: 9px !important;
           line-height: 1.6 !important;
         }
       }

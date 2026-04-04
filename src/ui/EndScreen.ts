@@ -29,7 +29,7 @@ export function showPigEarReveal(badge: { label: string; image: string }, onClos
 
   const label = document.createElement('p')
   label.style.cssText = `
-    font-size: 9px;
+    font-size: 8px;
     color: #ffaa00;
     letter-spacing: 2px;
     margin: 0;
@@ -50,7 +50,7 @@ export function showPigEarReveal(badge: { label: string; image: string }, onClos
 
   const badgeName = document.createElement('p')
   badgeName.style.cssText = `
-    font-size: 12px;
+    font-size: 16px;
     color: #ffffff;
     margin: 0;
     line-height: 1.8;
@@ -60,7 +60,7 @@ export function showPigEarReveal(badge: { label: string; image: string }, onClos
   const isPerfect = badge.image === 'badge-pigear.png'
   const sublabel = document.createElement('p')
   sublabel.style.cssText = `
-    font-size: 7px;
+    font-size: 8px;
     color: #888888;
     margin: 0;
     line-height: 2;
@@ -71,7 +71,7 @@ export function showPigEarReveal(badge: { label: string; image: string }, onClos
 
   const hint = document.createElement('p')
   hint.style.cssText = `
-    font-size: 7px;
+    font-size: 8px;
     color: #555555;
     margin: 0;
     animation: blink 1.2s ease infinite;
@@ -188,10 +188,10 @@ export function showEndScreen(badges: EarnedBadge[], onReturn: () => void) {
     <p style="font-size:8px; color:#ffff00; letter-spacing:2px; margin-bottom:10px;">
       [ MISSION DEBRIEF ]
     </p>
-    <h1 style="font-size:14px; color:#ffffff; margin:0 0 6px 0; line-height:1.8;">
+    <h1 style="font-size:16px; color:#ffffff; margin:0 0 6px 0; line-height:1.8;">
       CHAPTER 1 COMPLETE
     </h1>
-    <p style="font-size:7px; color:#888888; margin-bottom:28px; line-height:2;">
+    <p style="font-size:8px; color:#888888; margin-bottom:28px; line-height:2;">
       Los Angeles Wildfire — January 2025
     </p>
   `
@@ -244,7 +244,7 @@ export function showEndScreen(badges: EarnedBadge[], onReturn: () => void) {
 
     const labelEl = document.createElement('p')
     labelEl.style.cssText = `
-      font-size: 6px;
+      font-size: 8px;
       color: #ffaa00;
       line-height: 1.8;
       margin: 0;
@@ -264,7 +264,7 @@ export function showEndScreen(badges: EarnedBadge[], onReturn: () => void) {
     background: #0a1a0a;
     border-left: 4px solid #00ff88;
     padding: 12px 16px;
-    font-size: 7px;
+    font-size: 10px;
     line-height: 2.2;
     color: #aaffaa;
     text-align: left;
@@ -280,7 +280,7 @@ export function showEndScreen(badges: EarnedBadge[], onReturn: () => void) {
 
   const takeaway = document.createElement('p')
   takeaway.style.cssText = `
-    font-size: 7px;
+    font-size: 10px;
     color: #aaaaff;
     line-height: 2.2;
     margin-bottom: 28px;

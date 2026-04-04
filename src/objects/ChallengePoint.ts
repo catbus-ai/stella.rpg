@@ -47,9 +47,9 @@ export class ChallengePoint extends Phaser.GameObjects.Container {
     this.resolved = true
     this.pulseTween.stop()
     if (correct) {
-      this.ring.setFillStyle(0x00ff88, 0.3)
+      this.ring.setFillStyle(0x00ff88, 0.7)
     } else {
-      this.ring.setFillStyle(0xff2244, 0.3)
+      this.ring.setFillStyle(0xff2244, 0.7)
     }
   }
 }

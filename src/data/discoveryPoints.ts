@@ -13,6 +13,8 @@ export interface DiscoveryData {
   badgeImage: string  // filename inside public/assets/images/
   opticalImageUrl?: string
   opticalImageCredit?: string
+  sarImageUrl?: string      // cropped SAR chip for this discovery point
+  sarImageCredit?: string
 }
 
 // Place these at tile coordinates that match interesting features in YOUR SAR image.
@@ -25,13 +27,11 @@ export const DISCOVERY_POINTS: DiscoveryData[] = [
     tileY: 13,
     triggerRadius: 1,
     title: 'Burnt House',
-    sarDescription: 'Observation: Fuzzy grey blob',
+    sarDescription: 'Observation: Fuzzy white blobs',
     body:
-      'When a building burns down, its walls and roof collapse into rubble. ' +
-      'In radar, standing walls act like mirrors that bounce the radar beam back to the satellite. This would create a \'strong backscattered signal\' " ' +
-      'When the walls collapse, the radar signal scatters in many directions, making the signal fuzzy and noisy. ' +
-      'In a \'color subaperture image\' (CSI), strong colors indicate intact man-made structures. ' +
-      'No strong color here means the structure is gone.',
+      'When a building burns down, its walls & roof collapse into rubble. ' +
+      'In radar, standing walls are like mirrors that bounce the radar beam back to the satellite. ' +
+      'When the walls collapse, the radar signal scatters in many directions, making the signal fuzzy, white, & noisy. ',
     scienceFact:
       'The 2025 Palisades and Eaton fires destroyed over 16,000 structures in Los Angeles County — ' +
       'making it the most destructive wildfire in California history.',
@@ -41,6 +41,8 @@ export const DISCOVERY_POINTS: DiscoveryData[] = [
     badgeImage: 'badge-burntzone.png',
     opticalImageUrl: 'assets/images/house-burnt.png',
     opticalImageCredit: 'AP Photo / Mark J. Terrill',
+    sarImageUrl: 'assets/images/sar-chip-burnt.png',
+    sarImageCredit: 'ICEYE SAR Image (2025)',
   },
   {
     id: 'intact-building',
@@ -48,9 +50,9 @@ export const DISCOVERY_POINTS: DiscoveryData[] = [
     tileY: 24,
     triggerRadius: 1,
     title: 'Intact Building',
-    sarDescription: 'Observation: strong, bright color',
+    sarDescription: 'Observation: A strong, dominant color',
     body:
-      'This building survived the fire. The strong \'backscatter\' that is colorized red is a hint that this building is intact. The walls are standing.' +
+      'This building survived the fire. The strong, red \'backscatter\' means this building is intact. It is one strong color.' +
       'The radar signal bounces off the roof, and flies straight back to the satellite. ' +
       'In a color subaperture image, a strong, saturated color here tells us: a solid structure is standing. ' +
       'First responders can use this information to prioritize which neighborhoods are safe to enter for search and rescue.',
@@ -63,6 +65,8 @@ export const DISCOVERY_POINTS: DiscoveryData[] = [
     badgeImage: 'badge-safehouse.png',
     opticalImageUrl: 'assets/images/house-intact.png',
     opticalImageCredit: 'AP Photo / Chris Pizzello',
+    sarImageUrl: 'assets/images/sar-chip-intact.png',
+    sarImageCredit: 'ICEYE SAR Image (2025)',
   },
   {
     id: 'forest-vegetation',
@@ -70,11 +74,11 @@ export const DISCOVERY_POINTS: DiscoveryData[] = [
     tileY: 7,
     triggerRadius: 1,
     title: 'Forest & Vegetation',
-    sarDescription: 'Observation: this a fuzzy region with no strong color',
+    sarDescription: 'Observation: A fuzzy region with no dominant color',
     body:
-      'Forests and vegetation scatter radar in a unique way called "volume scattering." ' +
-      'The signal bounces through branches, leaves, and trunks before returning — creating a fuzzy texture in SAR. ' +
-      'Since the signal scatters in many directions, and there is no strong color, we know it is a natural area.',
+      'Forests & vegetation scatter radar in a unique way called "volume scattering." ' +
+      'The signal bounces through branches, leaves, & trunks before returning to the satellite. This creates a fuzzy texture in SAR. ' +
+      'Since the signal scatters in many directions, and there is no dominant color, we know it is a natural area.',
     scienceFact:
       'NASA\'s NIFC (National Interagency Fire Center) uses SAR burn severity maps to guide reforestation ' +
       'efforts and predict mudslide risk after fires remove vegetation that holds hillsides in place.',
@@ -84,5 +88,7 @@ export const DISCOVERY_POINTS: DiscoveryData[] = [
     badgeImage: 'badge-forestwatch.png',
     opticalImageUrl: 'assets/images/forest.png',
     opticalImageCredit: 'AllTrails, Monique Thomas 2022',
+    sarImageUrl: 'assets/images/sar-chip-forest.png',
+    sarImageCredit: 'ICEYE SAR Image (2025)',
   },
 ]

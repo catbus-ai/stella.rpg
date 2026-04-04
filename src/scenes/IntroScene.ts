@@ -161,18 +161,22 @@ export class IntroScene extends Phaser.Scene {
     this.skipKey    = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
     this.advanceKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
-    // Skip button (Phaser canvas, always visible)
+    // Skip button — more prominent for returning players
+    const returning = localStorage.getItem('stella_intro_seen') === 'true'
+    const skipColor  = returning ? '#ffff00' : '#555555'
+    const skipHover  = returning ? '#ffffff' : '#aaaaaa'
+
     const skipBtn = this.add
       .text(CANVAS_WIDTH - 16, CANVAS_HEIGHT - 14, '[ ESC: SKIP INTRO ]', {
         fontFamily: '"Press Start 2P"',
         fontSize: '8px',
-        color: '#555555',
+        color: skipColor,
         resolution: window.devicePixelRatio,
       })
       .setOrigin(1, 1).setDepth(100).setInteractive()
 
-    skipBtn.on('pointerover', () => skipBtn.setColor('#aaaaaa'))
-    skipBtn.on('pointerout',  () => skipBtn.setColor('#555555'))
+    skipBtn.on('pointerover', () => skipBtn.setColor(skipHover))
+    skipBtn.on('pointerout',  () => skipBtn.setColor(skipColor))
     skipBtn.on('pointerdown', () => this.startGame())
 
     this.runStep()
@@ -434,6 +438,7 @@ export class IntroScene extends Phaser.Scene {
   }
 
   private startGame() {
+    localStorage.setItem('stella_intro_seen', 'true')
     removeIntroDialogue()
     this.cameras.main.fade(500, 0, 0, 0)
     this.time.delayedCall(500, () => this.scene.start('GameScene'))
